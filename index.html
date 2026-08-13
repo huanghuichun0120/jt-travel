@@ -1,0 +1,638 @@
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2027 捷采印刷 員工旅遊 - 飯店住宿票選</title>
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --accent-color: #2b6cb0;
+            --bg-light: #f7fafc;
+            --text-dark: #2d3748;
+            --border-color: #e2e8f0;
+            --active-gold: #d69e2e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-top: 140px; /* Space for fixed header */
+        }
+
+        /* Fixed Top Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 15px 20px 10px;
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-btn {
+            background-color: #edf2f7;
+            color: #4a5568;
+            border: 2px solid transparent;
+            padding: 12px 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn:hover {
+            background-color: #e2e8f0;
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--active-gold);
+            box-shadow: 0 4px 12px rgba(26, 54, 93, 0.3);
+        }
+
+        /* 官網連結膠囊標籤樣式 */
+        .official-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2b6cb0;
+            background-color: #ebf8ff;
+            border: 1px solid #bee3f8;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            vertical-align: middle;
+        }
+
+        .official-link:hover {
+            background-color: #2b6cb0;
+            color: #ffffff;
+            border-color: #2b6cb0;
+            text-decoration: none;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hotel Content Sections */
+        .hotel-panel {
+            display: none;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .hotel-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hotel-header {
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+
+        .hotel-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .hotel-subtitle {
+            font-size: 1rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin: 25px 0 15px 0;
+            padding-left: 10px;
+            border-left: 4px solid var(--active-gold);
+        }
+
+        /* Room Badges & Images */
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .room-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            color: #2d3748;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .room-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .room-card span {
+            display: block;
+            font-size: 0.85rem;
+            color: #718096;
+            font-weight: normal;
+            margin-top: 4px;
+        }
+
+        /* Tables */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .info-table th, .info-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        .info-table th {
+            background-color: #edf2f7;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .info-table tr:hover {
+            background-color: #f7fafc;
+        }
+
+        /* Notes Box */
+        .notice-box {
+            background-color: #fffaf0;
+            border-left: 4px solid var(--active-gold);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #744210;
+        }
+
+        .notice-box ul {
+            padding-left: 20px;
+            margin-top: 8px;
+        }
+
+        /* Agency Footer */
+        footer {
+            margin-top: 40px;
+            background: var(--primary-color);
+            color: #ffffff;
+            padding: 25px 20px;
+            text-align: center;
+            border-radius: 12px;
+            font-size: 0.95rem;
+        }
+
+        footer h4 {
+            color: #f6ad55;
+            margin-bottom: 10px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            max-width: 800px;
+            margin: 15px auto 0 auto;
+            text-align: left;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 180px;
+            }
+            .nav-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .nav-btn {
+                font-size: 0.9rem;
+                padding: 10px 5px;
+            }
+            .hotel-title {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fixed Header with Nav -->
+    <header>
+        <div class="header-title">2027 捷采印刷 員工旅遊 — 飯店選擇票選</div>
+        <nav class="nav-buttons">
+            <button class="nav-btn active" onclick="switchHotel(1)">① 名人堂花園大飯店</button>
+            <button class="nav-btn" onclick="switchHotel(2)">② 淡水將捷金鬱金香</button>
+            <button class="nav-btn" onclick="switchHotel(3)">③ 煙波大飯店湖濱館</button>
+            <button class="nav-btn" onclick="switchHotel(4)">④ 墾丁凱撒大飯店</button>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <!-- HOTEL 1 -->
+        <div id="hotel-1" class="hotel-panel active">
+            <div class="hotel-header">
+                <div>
+                    <h2 class="hotel-title">
+                        ① 名人堂花園大飯店 (Fame Hall Garden Hotel)
+                        <a href="https://hotel.fhgh.com.tw/" target="_blank" rel="noopener noreferrer" class="official-link">🔗 官方網站</a>
+                    </h2>
+                    <div class="hotel-subtitle">桃園龍潭 | 全台唯一結合棒球及史努比主題飯店，桃園最「棒」親子渡假飯店</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">房型選擇</h3>
+            <div class="room-grid">
+                <div class="room-card">
+                    <img src="images/【豪華客房】雙人房.jpg" alt="【豪華客房】雙人房">
+                    【豪華客房】雙人房<span>一大床 / 2小床</span>
+                </div>
+                <div class="room-card">
+                    <img src="images/【豪華客房】三人帳篷房.jpg" alt="【豪華客房】三人帳篷房">
+                    【豪華客房】三人帳篷房<span>一大床 + 1帳篷床</span>
+                </div>
+                <div class="room-card">
+                    <img src="images/【豪華客房】四人家庭房.jpg" alt="【豪華客房】四人家庭房">
+                    【豪華客房】四人家庭房<span>2中床</span>
+                </div>
+                <div class="room-card">
+                    <img src="images/【棒球經典主題客房】.jpg" alt="【棒球經典主題客房】">
+                    【棒球經典主題客房】<span>四人家庭房 (2中床)</span>
+                </div>
+                <div class="room-card">
+                    <img src="images/Image_005.jpg" alt="【老兄弟懷舊主題客房】">
+                    【老兄弟懷舊主題客房】<span>四人家庭房 (2中床)</span>
+                </div>
+            </div>
+
+            <h3 class="section-title">飯店特色設施</h3>
+            <p style="margin-bottom: 12px; color: #4a5568;">
+                <strong>棒球名人堂展示館：</strong>獨特棒球球體造型，直徑32公尺為亞洲最大球體建築之一。陳列歷屆名人堂選手與台灣棒球重要文物，融合棒球與史努比花生漫畫元素，開放免費參觀。
+            </p>
+            <div class="room-grid">
+                <div class="room-card">棒球名人堂 / 棒球體驗區</div>
+                <div class="room-card">花生漫畫競賽場 / 史努比園地</div>
+                <div class="room-card">戶外游泳池 & 三溫暖</div>
+                <div class="room-card">兒童俱樂部 & 健身房</div>
+            </div>
+
+            <h3 class="section-title">園區活動參考</h3>
+            <table class="info-table">
+                <thead>
+                    <tr>
+                        <th>活動內容</th>
+                        <th>活動時間</th>
+                        <th>地點 / 報名方式</th>
+                        <th>收費標準</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>DIY手作</strong></td>
+                        <td>平日 14:30-16:00<br>假日 10:30-17:00</td>
+                        <td>飯店3F休閒中心 / 球形建築3F<br>(掃碼線上預約)</td>
+                        <td>依當季課程為主<br>(指定專案可免費參加或兌換材料包)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>魚蝦撈撈樂</strong></td>
+                        <td>14:00 - 17:00</td>
+                        <td>花海步道小溪流 (現場報名)</td>
+                        <td>NT$250 / 小時 (含工具租借)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>吹泡泡活動</strong></td>
+                        <td>10:00 - 16:30 (分時段)</td>
+                        <td>老樟樹草坪 (需預約)</td>
+                        <td>房客免費 (原價 NT$100/組)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>羽球運動</strong></td>
+                        <td>平日 14:00-22:00<br>假日 08:00-22:00</td>
+                        <td>羽球館 (預約專線 #8180)</td>
+                        <td>房客優惠 NT$100~200 / 小時<br>(含4支球拍+練習球)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- HOTEL 2 -->
+        <div id="hotel-2" class="hotel-panel">
+            <div class="hotel-header">
+                <div>
+                    <h2 class="hotel-title">
+                        ② 淡水將捷金鬱金香酒店 (Fab Hotel New Taipei)
+                        <a href="https://www.goldentulip-fabhotel.com.tw/" target="_blank" rel="noopener noreferrer" class="official-link">🔗 官方網站</a>
+                    </h2>
+                    <div class="hotel-subtitle">新北淡水 | 北台灣國際型渡假酒店，飽覽淡水美麗四季與夕陽景致</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">房型選擇</h3>
+            <div class="room-grid">
+                <div class="room-card">
+                    <img src="images/Image_012.jpg" alt="標準雙人房">
+                    標準雙人房<span>一大床</span>
+                </div>
+                <div class="room-card">
+                    <img src="images/Image_013.jpg" alt="標準雙床客房">
+                    標準雙床客房<span>2小床</span>
+                </div>
+                <div class="room-card">
+                    <img src="images/Image_014.jpg" alt="高級客房">
+                    高級客房<span>2中床</span>
+                </div>
+            </div>
+
+            <h3 class="section-title">園區設施與餐飲亮點</h3>
+            <p style="margin-bottom: 12px; color: #4a5568;">
+                位於「滬尾藝文休閒園區」內，結合禮萊廣場、國賓影城、2000坪埔頂草原。
+            </p>
+            <table class="info-table">
+                <thead>
+                    <tr>
+                        <th>餐廳/設施</th>
+                        <th>營業 / 開放時間</th>
+                        <th>特色介紹</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>滬尾之星 (Bar)</strong></td>
+                        <td>平日 15:00-23:00<br>假日 11:00-23:00</td>
+                        <td>挑高超過3層樓的沙龍酒吧，拱門核心設計。週六 15:00/20:00 享 Star Live 現場演唱。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>河畔餐廳 (Buffet)</strong></td>
+                        <td>早餐 07:00-10:00<br>晚餐 17:30-19:00</td>
+                        <td>大面落地窗與植生牆，集結中、日、台、義、美等多國特色料理，晚餐安排自助餐。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>捷動能 / 健身房</strong></td>
+                        <td>07:00 - 22:00</td>
+                        <td>2F休閒空間，需著運動服裝登記房號使用。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>自助洗衣房</strong></td>
+                        <td>24小時開放 (00:00-23:59)</td>
+                        <td>3F大廳層客房區，免費提供住客使用。</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">房客專屬活動體驗</h3>
+            <div class="room-grid">
+                <div class="room-card">房客彩繪手作<span>每房免費兌換一份</span></div>
+                <div class="room-card">吸盤式射箭體驗<span>房客免費 (每次10 min)</span></div>
+                <div class="room-card">5G互動體驗(跑酷/節奏)<span>房客免費 (每次10 min)</span></div>
+                <div class="room-card">園森散步生態導覽<span>每日晨間09:30 (需提前報名)</span></div>
+                <div class="room-card">流體熊 / 星球燈手作<span>房客優惠價 NT$400</span></div>
+            </div>
+        </div>
+
+        <!-- HOTEL 3 -->
+        <div id="hotel-3" class="hotel-panel">
+            <div class="hotel-header">
+                <div>
+                    <h2 class="hotel-title">
+                        ③ 煙波大飯店新竹湖濱館 (Lakeshore Hotel Hsinchu)
+                        <a href="https://hsinchu.lakeshore.com.tw/room" target="_blank" rel="noopener noreferrer" class="official-link">🔗 官方網站</a>
+                    </h2>
+                    <div class="hotel-subtitle">新竹市區 | 鄰近青草湖，擁有全台頂級親子室內樂園與完整水上俱樂部</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">房型選擇【香榭館】</h3>
+            <div class="room-grid">
+                <div class="room-card">
+                    <img src="images/經典家庭房.jpg" alt="經典家庭房">
+                    經典家庭房<span>2大床</span>
+                </div>
+                <div class="room-card">
+                    <img src="images/豪華家庭房.jpg" alt="豪華家庭房">
+                    豪華家庭房<span>2大床</span>
+                </div>
+            </div>
+
+            <h3 class="section-title">煙波俱樂部設施一覽 (B1)</h3>
+            <table class="info-table">
+                <thead>
+                    <tr>
+                        <th>設施名稱</th>
+                        <th>開放時間</th>
+                        <th>規範與亮點</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>卡樂次元樂園</strong></td>
+                        <td>08:30 - 22:00</td>
+                        <td>星際主題樂園，適合3~12歲兒童 (需穿著襪子入場)。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>小彩虹遊戲室</strong></td>
+                        <td>08:30 - 22:00</td>
+                        <td>專為0~3歲嬰幼兒打造的 safe 遊戲空間。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>溫水泳池 & SPA水療區</strong></td>
+                        <td>08:30 - 22:00</td>
+                        <td>室內溫水泳池(水深120cm)、SPA池(90cm)、兒童戲水池(60cm)。需著泳衣泳帽。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>男女三溫暖</strong></td>
+                        <td>07:00 - 22:00</td>
+                        <td>提供蒸氣室、桑拿與冷熱池 (限95cm以上，需同性家長陪同)。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>健身房</strong></td>
+                        <td>07:00 - 22:00</td>
+                        <td>限制16歲以上成人使用，須穿著運動服及運動鞋。</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="notice-box">
+                * <strong>注意事項：</strong>每日 12:00~14:00 (或泳池12:00~13:30) 為設施清場清潔消毒時間。俱樂部免費提供毛巾與沐浴用品。
+            </div>
+        </div>
+
+        <!-- HOTEL 4 -->
+        <div id="hotel-4" class="hotel-panel">
+            <div class="hotel-header">
+                <div>
+                    <h2 class="hotel-title">
+                        ④ 墾丁凱撒大飯店 (Caesar Park Hotel Kenting)
+                        <a href="https://kenting.caesarpark.com.tw/" target="_blank" rel="noopener noreferrer" class="official-link">🔗 官方網站</a>
+                    </h2>
+                    <div class="hotel-subtitle">屏東恆春 | 鄰近墾丁國家公園與小灣沙灘，充滿熱帶峇里島風情</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">房型選擇</h3>
+            <div class="room-grid">
+                <div class="room-card">
+                    <img src="images/景觀客房.jpg" alt="景觀客房">
+                    景觀客房<span>二大床</span>
+                </div>
+            </div>
+
+            <h3 class="section-title">休閒設施開放時間表</h3>
+            <table class="info-table">
+                <thead>
+                    <tr>
+                        <th>休閒設施</th>
+                        <th>開放時間</th>
+                        <th>特色說明與收費</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>椰林泳池 (戶外)</strong></td>
+                        <td>08:00 - 21:00</td>
+                        <td>獨特不規則設計與扶桑花花磚，正對大尖山。憑房卡租借海灘巾。(12:00-13:30維護暫停)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>小灣沙灘 & 服務站</strong></td>
+                        <td>08:00 - 18:30</td>
+                        <td>免費憑房卡登記遮陽傘、躺椅及玩沙玩具。提供衝浪、獨木舟等水上活動。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>沙灘排球</strong></td>
+                        <td>10:00 - 17:00</td>
+                        <td>NT$ 1,500 / 90分鐘 (含排球網與2個排球)。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>休閒中心 / 兒童館</strong></td>
+                        <td>09:00 - 22:00</td>
+                        <td>球池、桌球、撞球、SWITCH、手足球免費登記使用。另有育嬰室與哺乳室。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>棋藝館</strong></td>
+                        <td>09:00 - 22:00</td>
+                        <td>NT$ 600 / 2小時。</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">酒吧餐飲體驗</h3>
+            <div class="room-grid">
+                <div class="room-card">大廳酒吧<span>舒適沙發，遠眺大尖山享受咖啡美酒</span></div>
+                <div class="room-card">小灣吧 (Beach Bar)<span>沙灘露天酒吧，白天歡樂夜晚浪漫</span></div>
+                <div class="room-card">Tucano 酒吧<span>室內外爵士音樂酒吧，微醺時光</span></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <h4>弘立旅行社 — 服務團隊資訊</h4>
+            <p>地址：台中市西區台灣大道一段728號12樓-8 | TEL: 04-24731598 | FAX: 04-2473172</p>
+            <div class="contact-grid">
+                <div>• 紅姐：0931-637985</div>
+                <div>• Queena賴：0927-398598</div>
+                <div>• 賴雪莉：0931-285287</div>
+                <div>• Tanya廖：0930-526918</div>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.8rem; color: #cbd5e0;">交觀甲:6540 | 中品保:0235</p>
+        </footer>
+
+    </div>
+
+    <script>
+        function switchHotel(hotelNum) {
+            // Hide all panels
+            const panels = document.querySelectorAll('.hotel-panel');
+            panels.forEach(panel => panel.classList.remove('active'));
+
+            // Deactivate all buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected panel & activate button
+            document.getElementById('hotel-' + hotelNum).classList.add('active');
+            buttons[hotelNum - 1].classList.add('active');
+
+            // Scroll smoothly to top of panel content area on mobile
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
